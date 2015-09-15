@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+
+{% block sidebar %}
+  <span id="focusThread">
+  <strong><span id="focused-group-name">{{groups[0].hashtagString | hashtagToGroupname | capitalize}}</span></strong>
+  {% if groups[0].user_photos | length > 3 %}
+    <button style="float:right; margin-top: -5px; margin-right: 2px;
+    margin-left: 2px;" type="button" class="btn btn-default btn-circle btn-sm" disabled="true"><i class="glyphicon"></i>
+    <span id="focused-more-avatars">{{groups[0].user_photos | length - 3}}+</span>
+    </button>
+  {% endif %}
+  <span id="focused-group-avatars">
+    {% if groups[0].user_photos | length <= 3 %}
+      {% for avatar in groups[0].user_photos %}
+        <img src="{{avatar}}" class="img-circle" style="height:30px; width:30px; float:right; margin-top: -5px; margin-right: 2px;
+        margin-left: 2px;" alt="Circular Image">
+      {% endfor %}
+    {% else %}
+      {% for avatar in groups[0].user_photos[:3] %}
+        <img src="{{avatar}}" class="img-circle" style="height:30px; width:30px; float:right; margin-top: -5px; margin-right: 2px;
+        margin-left: 2px;" alt="Circular Image">
+      {% endfor %}
+    {% endif %}
+  </span>
+  <br></br>
+  <span id="focused-group-tweets">
+    <p>
+      {% for tweet in groups[0].tweets | reverse %}
+        {% if tweet.is_question %}
+          <span style="background-color: #E0F8E0"><span> {{tweet.created_at_str}}&nbsp;&nbsp;</span>{{tweet.text}}</span>
+        {% else %}
+          <span> {{tweet.created_at_str}}&nbsp;&nbsp;</span>{{tweet.text}}
+        {% endif %}
+      </p>
+    {% endfor %}
+  </span>
+  <div style="height: 25vh;">
+  </div>
+  </span>
+  <span id="newThread" style="display:none;">
+    <div id="new-thread-form-group" class="form-group">
+      <label id="new-thread-control-label" class="control-label" for="inputSuccess1">New Thread Name</label>
+      <input id="new-group-name" type="text" class="form-control" placeholder="Group 1" aria-describedby="basic-addon1" maxlength="20">
+    </div>
+  </span>
+
+
+{% endblock %}
+
+{% block content %}
+  <span id="allTweets">
+  {% include 'tweettile.html' %}
+  </span>
+  {% endblock %}
+  <!--{% block scripts %}
+    <script type="text/javascript" src="../static/js/stream.js"></script>
+  {% endblock %} -->

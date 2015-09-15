@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %} ClassTweeter {% endblock %}</title>
+    <link href="../static/css/bootstrap.css" rel="stylesheet">
+    <link href="../static/css/style.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    {% block head %}{% endblock %}
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div id="sidebar" class="col-sm-4 col-md-4" style="
+                background-color:#fff; 
+                margin-top: 0px; 
+                padding-right: 15px;
+                padding-left: 15px;
+                padding-top: 15px;
+                padding-bottom: 15px;
+                border-radius:0px;
+                /*outline: 2px solid #ccc;*/
+                margin-right: 5px;
+                margin-left: 0px;
+                margin-top: 0px;
+                margin-bottom: 0px;
+                height:100%;
+                overflow:scroll;
+                border-left: 1px solid #4099FF;
+                border-right: 1px solid #4099FF;
+                position: fixed;">
+        {% block sidebar %}{% endblock %}
+      </div>
+    <nav class="navbar navbar-default navbar-fixed-bottom" style="float: left; height: 22vh; background-color:transparent; border: none; margin-left:15px;">
+        <div style="height: 22vh; width: 31.2vw; background-color:white; margin-left: 1px;">
+          <textarea id="tweet-textarea" style="height: 15vh; border-radius: 0px; border-left: 0px; border-right: 0px;" class="form-control" placeholder="Add to the conversation here..." maxlength="{{140 - hashtag_to_send | length}}"></textarea>
+          <button id="send-tweet-button" class="btn btn-primary btn-unsent" style=" margin-top:5px; float:right; border: 0px; border-radius: 0px; margin-right: 15px;"> Send </button>
+          <span style="float: right; margin-right: 10px; margin-top: 10px;"><span id="charsLeft">{{140 - hashtag_to_send | length}}</span> / <span id="charsTotal">{{140 - hashtag_to_send | length}} </span> </span>
+          <input id="hashtag_to_add" type="hidden" value="{{hashtag_to_send}}">
+        </div>
+      </nav>
+      <div class="col-sm-4 col-md-8" style= "margin-top: 0px; margin-left: 5px; margin-left: 425px; ">
+        <span style="position: fixed; z-index: 100000000; right: 20px; bottom: 20px;"><a style="float:right; margin-top: 10vh; margin-right: 5vh;" class="round-button" id="new-thread-button">+</a></span>
+        {% include 'header.html' %}
+        {% block content %}{% endblock %}
+      </div>
+      
+      
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../static/js/bootstrap.min.js"></script>
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

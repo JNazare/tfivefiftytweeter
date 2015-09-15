@@ -12,12 +12,22 @@ import json
 import re
 from datetime import datetime, timedelta
 from email.utils import parsedate_tz
+import helpers
 
 app = Flask(__name__)
 app.secret_key = 'shhhhhh'
 app.config['SERVER_NAME'] = 'localhost:5000'
 consumer_token = keys.CONSUMER_TOKEN
 consumer_secret = keys.CONSUMER_SECRET
+
+@app.template_filter('strftime')
+def datetimeformat(value, format='%H:%M'):
+    return value.strftime(format)
+
+@app.template_filter('hashtagToGroupname')
+def hashtagToGroupname(hashtag):
+    # print hashtag
+    return hashtag.replace("_", " ")
 
 def login_required(f):
     @wraps(f)
@@ -33,13 +43,23 @@ def getAPI():
     auth = tweepy.OAuthHandler(consumer_token, consumer_secret)
     auth.set_access_token(key, secret)
     api = tweepy.API(auth)
+    if session.get("id_str", None) == None:
+        session["id_str"] = api.me().id
     return api
+
+def connect():
+    connection = MongoClient(keys.MONGO_KEYS[0], keys.MONGO_KEYS[1])
+    handle = connection[keys.MONGO_KEYS[2]]
+    handle.authenticate(keys.MONGO_KEYS[3], keys.MONGO_KEYS[4])
+    return handle
 
 @app.route('/')
 @login_required
 def index():
-    api = getAPI()
-    return str(api.me().id)
+    getAPI()
+    tweets = dumps(list(connect().collected_tweets.find()))
+    organizedTweets = helpers.sortTweets(loads(tweets), session)
+    return flask.render_template('index.html', groups=organizedTweets, focus_group=organizedTweets[0])
 
 @app.route('/request_url')
 def login():
@@ -75,6 +95,40 @@ def callback():
         print 'Error! Failed to get access token.'
 
     return redirect(url_for('index'))
+
+@app.route('/refresh')
+@login_required
+def refresh():
+    handle = connect()
+    tweets = dumps(list(handle.collected_tweets.find()))
+    organizedTweets = helpers.sortTweets(loads(tweets), session)
+    return render_template('tweetcard.html', groups=organizedTweets)#, render_template('sidebar-content.html', focus_group=organizedTweets[0])
+
+@app.route('/refresh_sidebar')
+@login_required
+def refresh_sidebar():
+    group = request.args.get("focused_group", None)
+    handle = connect()
+    tweets = dumps(list(handle.collected_tweets.find()))
+    organizedTweets = helpers.sortTweets(loads(tweets), session)
+    focused_info = None
+    for grouping in organizedTweets:
+        if group == grouping["hashtagString"]:
+            focused_info = grouping
+    return render_template('sidebar-content.html', focus_group=focused_info)
+
+@app.route("/sendToTwitter", methods=['POST'])
+@login_required
+def sendToTwitter():
+    text = request.form.to_dict().keys()[0]
+    api = getAPI()
+    api.update_status(text)
+    return 'done'
+
+@app.route('/focus', methods=['POST'])
+@login_required
+def focus():
+    return render_template('sidebar-content.html', focus_group=request.json)
 
 
 if __name__ == '__main__':

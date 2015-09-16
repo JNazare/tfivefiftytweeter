@@ -16,7 +16,7 @@ import helpers
 
 app = Flask(__name__)
 app.secret_key = 'shhhhhh'
-app.config['SERVER_NAME'] = 'localhost:5000'
+app.config['SERVER_NAME'] = 'classtweeter.media.mit.edu'
 consumer_token = keys.CONSUMER_TOKEN
 consumer_secret = keys.CONSUMER_SECRET
 
@@ -63,7 +63,7 @@ def index():
 
 @app.route('/request_url')
 def login():
-    callback_url = "http://localhost:5000/callback"
+    callback_url = "http://classtweeter.media.mit.edu/callback"
     auth = tweepy.OAuthHandler(consumer_token, consumer_secret, callback_url)
     redirect_url = auth.get_authorization_url()
     session["key"] = auth.request_token.key
@@ -137,4 +137,4 @@ def help():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=80)

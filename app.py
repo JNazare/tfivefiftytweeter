@@ -130,6 +130,11 @@ def sendToTwitter():
 def focus():
     return render_template('sidebar-content.html', focus_group=request.json)
 
+@app.route('/help')
+@login_required
+def help():
+    return render_template('help.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)

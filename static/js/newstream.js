@@ -1,3 +1,9 @@
+function updateNumCharsAllowed(numChars){
+	$("#charsTotal").text(numChars);
+	$("#charsLeft").text(numChars);
+	$("#tweet-textarea").attr('maxlength', numChars);
+}
+
 function showOnlyMyTweets(){
 	$(".tweet-tile").each(function(index){
 		author_class = $(this).attr('class').split(" ")[0];
@@ -55,7 +61,7 @@ $( document ).ready(function() {
 	});
 
 	$("#new-thread-button").click(function(){
-		$("#focusThread").toggle();
+		$("#sidebar-content-js").toggle();
 		$("#newThread").toggle();
 		if ($("#new-group-name").is(':visible')==true) {
 			new_thread = true;
@@ -90,7 +96,7 @@ $( document ).ready(function() {
 				$("#new-thread-form-group").removeClass("has-error");
 				$("#new-thread-control-label").text("New Thread Name");
 				if ($("#new-group-name").is(':visible')==true) {
-					$("#focusThread").toggle();
+					$("#sidebar-content-js").toggle();
 					$("#newThread").toggle();
 					$("#"+focused_thread).addClass("thought-tile-selected");
 					var numCharsUsed = 140-(" #" + focused_thread + " #classtweeter").length;

@@ -113,3 +113,7 @@ span.round-button-span{
 	right: 20px; 
 	bottom: 20px;
 }
+
+.new-hashtag-label{
+    margin-left: 0px !important;
+}

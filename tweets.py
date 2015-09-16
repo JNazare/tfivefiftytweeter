@@ -2,9 +2,11 @@ import sys
 import tweepy
 import json
 import keys
+import daemon
+import time
 from pymongo import MongoClient
 
-TRACKED_HASHTAG='#classtweeter'
+TRACKED_HASHTAG='#tfivefifty'
 
 CONSUMER_TOKEN=keys.CONSUMER_TOKEN
 CONSUMER_SECRET=keys.CONSUMER_SECRET
@@ -42,10 +44,21 @@ class CustomStreamListener(tweepy.StreamListener):
                 savejson["user_profile_image_url"]=str(twitter_json["user"]["profile_image_url"])
                 savejson["created_at"]=str(twitter_json["created_at"])
                 tweet_id = twitter_collection.insert(savejson)
+		#with open("/tmp/logs/tweetlogs.txt", "a") as f:
+		#	f.write("Time: " + str(time.time()) + ", tweet_id: " + str(tweet_id)) 
+		print "Time: " + str(time.time()) + ", tweet_id: " + str(twitter_json["id_str"]) + ", user_id: " + twitter_json["user"]["id_str"]
+		#with open("log.txt", "w") as f:
+		#	f.write("Logging tweets at: " + time.ctime())
+		#f.close()
             except:
                 # Catch any unicode errors while printing to console
                 # and just ignore them to avoid breaking application.
                 pass
 
-stream = tweepy.Stream(auth, CustomStreamListener(), timeout=None, compression=True)
-stream.filter(track=[TRACKED_HASHTAG])
+def run():
+	#with daemon.DaemonContext():
+	stream = tweepy.Stream(auth, CustomStreamListener(), timeout=None, compression=True)
+	stream.filter(track=[TRACKED_HASHTAG])
+
+if __name__ == "__main__":
+	run()

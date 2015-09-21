@@ -5,7 +5,7 @@ from bson import json_util
 from bson.json_util import dumps
 from bson.json_util import loads
 
-raw_hashtag = "tfivefifty"
+raw_hashtag = "t550tweeter"
 
 def datetimeformat(value, format='%H:%M'):
     return value.strftime(format)

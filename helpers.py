@@ -5,6 +5,8 @@ from bson import json_util
 from bson.json_util import dumps
 from bson.json_util import loads
 
+raw_hashtag = "tfivefifty"
+
 def datetimeformat(value, format='%H:%M'):
     return value.strftime(format)
 
@@ -47,7 +49,7 @@ def sortHashtagsinTweet(tweet):
     hashtagArray = tweet.get("hashtags", None)
     for hashtag in hashtagArray:
         tweet["text"] = tweet["text"].replace("#"+hashtag, "")
-    hashtagArray.remove('classtweeter')
+    hashtagArray.remove(raw_hashtag)
     hashtagArray.sort()
     hashtagString = " ".join(hashtagArray)
     return [tweet, hashtagString]

@@ -6,7 +6,7 @@ import daemon
 import time
 from pymongo import MongoClient
 
-TRACKED_HASHTAG='#tfivefifty'
+TRACKED_HASHTAG='#t550tweeter'
 
 CONSUMER_TOKEN=keys.CONSUMER_TOKEN
 CONSUMER_SECRET=keys.CONSUMER_SECRET
